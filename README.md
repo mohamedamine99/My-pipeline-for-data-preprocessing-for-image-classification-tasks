@@ -1,5 +1,6 @@
 # My-pipeline-for-data-preprocessing-for-image-classification-tasks
 Data collection and preprocessing: This includes collecting a large dataset of labeled images, and then preprocessing the images by resizing, normalizing, and augmenting them to ensure that the model is not overfitting.
+The functions below are most useful when there are no pandas dataframes provided and you do not want or need to work with dataframes, instead work directly with files and directory classes.
 
 ## Table of contents
 
@@ -30,7 +31,11 @@ import random
 from cv2 import imread
 import time
 ```
+
 ## Resetting a directory
+
+`reset_directory(dir_path)` removes all files within a directory defined by dir_path.
+
 ```py
 def reset_directory(dir_path=''):
 
@@ -54,10 +59,14 @@ def reset_directory(dir_path=''):
 ```
 
 ## Getting some dataset stats overview
+This function `print_lengths(path = '')` prints the statistics of the images present in the directory and its subdirectories: 
+* prints the number of subdirectories present in the directory.
+* prints the number of images present in each subdirectories 
+
 
 ```py
 
-def print_stats(path = ''):
+def print_lengths(path = ''):
     l =  []
     for class_name in os.listdir(path):
         print("{} : {} images".format(class_name,len(os.listdir(path + '/' + class_name))))
@@ -72,16 +81,54 @@ def print_stats(path = ''):
 print("*********************")
 print("TRAIN DATA STATS")
 
-print_stats(path = train_path)
+print_lengths(path = train_path)
 
 print("*********************")
 print("TEST DATA STATS")
 
-print_stats(path = test_path)
+print_lengths(path = test_path)
 
 print("*********************")
 ```
+This function `print_stats(path = '', verbose = False)` prints statistics of an image dataset by providing the number of images in each subdirectories, `max`,` min`, `sum`, `average` and `standard deviation` of the number of images in each subdirectories. It also returns the list of the number of images in each subdirectories.
+
+```py
+def print_stats(path = '', verbose = False):
+    """
+    Print statistics of an image dataset.
+
+    Args:
+        path (str): The directory path of the image dataset.
+        verbose (bool): If True, print the number of images in each subdirectory.
+    
+    Returns:
+        list : A list of the number of images in each subdirectory of the dataset.
+
+    """
+    sizes = []
+    i = 0
+    for filename in os.listdir(path):
+        i+=1
+        size = len(os.listdir(path + '/' + filename))
+        sizes.append(size)
+        if verbose == True :
+            print(size , end = " ")
+            if (i% 20 == 0):
+                print()
+    print()
+
+    print("Max samples = {}".format(max(sizes)))
+    print("Min samples = {}".format(min(sizes)))
+    print("sum samples = {}".format(sum(sizes)))
+    print("Average sample size = {}".format(np.mean(sizes)))
+    print("Sample sizes standard deviation = {}".format(np.std(sizes)))
+
+    return sizes
+   
+```
 ## Checking for corrupt image files
+
+This function `extract_corrupt_img_files(dir_path='' ,verbose = True)` is used to find the corrupted image files in a given directory and returns the list of corrupted files. It also provides some details like the time taken to process the files, the number of corrupted files found, and their names.
 
 ```py
 def extract_corrupt_img_files(dir_path='' ,verbose = True):
@@ -124,6 +171,8 @@ print(corrupted)
 ```
 ## Train Test Validation split
 
+This function `train_test_validation_split(data_path = '',test_split = 0.15, validation_split = 0.15)` is used to split the dataset into three parts: train, test, and validation set. It takes the data path for the dataset and the percentage for each of the test and validation splits.
+
 ```py
 def train_test_validation_split(data_path = '',test_split = 0.15, validation_split = 0.15):
 
@@ -165,6 +214,9 @@ def train_test_validation_split(data_path = '',test_split = 0.15, validation_spl
     
 
 ## Visualizing samples
+
+This function `visualize_samples(path ='', ncols = 1, nrows = 1, fig_size = (7,4), title ="")` is used to visualize a random sample of images from a directory. It takes the directory path, number of columns, number of rows, figure size and title as input and display the images in a grid format.
+
 ```py
 
 def visualize_samples(path ='', ncols = 1, nrows = 1, fig_size = (7,4), title =""):
