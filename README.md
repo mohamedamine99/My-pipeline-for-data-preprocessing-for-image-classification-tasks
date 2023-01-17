@@ -8,8 +8,10 @@ Data collection and preprocessing: This includes collecting a large dataset of l
   <summary>Table of Contents</summary>
   <ol>
     <li><a href="#importing-libraries">Importing libraries</a></li>  
+    <li><a href="#resetting-a-directory">Resetting a directory</a></li> 
     <li><a href="#getting-some-dataset-stats-overview">Getting some dataset stats overview</a></li> 
     <li><a href="#checking-for-corrupt-image-files">Checking for corrupt image files</a></li>
+    <li><a href="#train-test-validation-split">Train Test Validation split</a></li>
     <li><a href="#visualizing-samples">Visualizing samples</a></li>
     <li><a href="#data-augmentation">Data augmentation</a></li>
    
@@ -28,6 +30,29 @@ import random
 from cv2 import imread
 import time
 ```
+## Resetting a directory
+```py
+def reset_directory(dir_path=''):
+
+    # If the directory is already empty, print a message and return
+
+    if len(os.listdir(dir_path)) == 0 :
+        print(dir_path + " is already empty")
+        return
+
+    # Print a message and record the starting time
+    beg = time.time()
+    print("resetting "+ dir_path)
+
+    # Delete the directory and all its contents
+    shutil.rmtree(dir_path)
+
+    # Create an empty directory in the same location
+    os.makedirs(dir_path)
+    print(dir_path + " is now empty")
+    print("timing : " + str(time.time() - beg))
+```
+
 ## Getting some dataset stats overview
 
 ```py
@@ -97,6 +122,48 @@ for path in [test_path, train_path]:
 print(len(corrupted))
 print(corrupted)
 ```
+## Train Test Validation split
+
+```py
+def train_test_validation_split(data_path = '',test_split = 0.15, validation_split = 0.15):
+
+
+    # Calculate the total number of files in the dataset
+    data_size = len(os.listdir(data_path))
+
+    # Calculate the number of files to include in the test and validation sets
+    test_size = int(test_split * data_size)
+    validation_size = int(validation_split * data_size)
+    
+
+    
+    test_sample = []
+    validation_sample = []
+    train_sample = []
+    
+    # Select a random sample of files for the test set
+    test_sample = random.sample(os.listdir(data_path),test_size )
+    
+    # Calculate the remaining files that are not in the test set
+    train_data = set(os.listdir(data_path)) - set(test_sample)
+    train_data = list(train_data)
+    
+    # Select a random sample of files from the remaining files for the validation set
+    validation_sample = random.sample(train_data,validation_size )
+    
+    # Calculate the remaining files that are not in the validation set
+    train_sample = set(train_data) - set(validation_sample)
+    train_sample = list(train_sample)
+    
+    # Print the sizes of the train, test, and validation sets
+    print('train size ' + str(len(train_sample)))
+    print('test size ' + str(len(test_sample)))
+    print('validation size ' + str(len(validation_sample)))
+    
+    return train_sample, test_sample , validation_sample
+```
+    
+
 ## Visualizing samples
 ```py
 
