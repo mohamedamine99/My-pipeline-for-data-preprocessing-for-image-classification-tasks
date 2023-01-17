@@ -7,32 +7,16 @@ Data collection and preprocessing: This includes collecting a large dataset of l
 <details open="open">
   <summary>Table of Contents</summary>
   <ol>
-    <li><a href="#about-the-project">About The Project</a></li>  
-    <li><a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#hardware-requirements">Hardware Requirements</a></li>
-        <li><a href="#software-requirements">Software Requirements</a></li>
-        <li><a href="#backend-setup">Backend Setup</a></li>
-      </ul>
-    </li>
-    <li><a href="#understanding-the-hardware">Understanding the hardware</a>
-      <ul>
-        <li><a href="#the-dht11-humidity-and-temperature-sensor">the DHT11 humidity and temperature sensor</a></li>
-        <li><a href="#the-rgb-leds">the RGB LEDs</a></li>
-      </ul>
- </li> 
-    <li><a href="#software-implementation">Software implementation</a></li>
-    <li><a href="#executing-the-program">Executing the program</a></li>
-    <li><a href="#making-an-upgrade">Making an upgrade</a></li>
-    <li><a href="#3d-conception">3D Conception</a></li>
-    <li><a href="#conclusion-and-perspective">Conclusion and perspective</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgements">Acknowledgements</a></li>
-    
-    
+    <li><a href="#importing-libraries">Importing libraries</a></li>  
+    <li><a href="#getting-some-dataset-stats-overview">Getting some dataset stats overview</a></li> 
+    <li><a href="#checking-for-corrupt-image-files">Checking for corrupt image files</a></li>
+    <li><a href="#visualizing-samples">Visualizing samples</a></li>
+    <li><a href="#data-augmentation">Data augmentation</a></li>
+   
   </ol>
 </details>
 
+## Importing libraries
 ```py
 import numpy as np
 import pandas as pd
@@ -44,6 +28,7 @@ import random
 from cv2 import imread
 import time
 ```
+## Getting some dataset stats overview
 
 ```py
 
@@ -71,6 +56,8 @@ print_stats(path = test_path)
 
 print("*********************")
 ```
+## Checking for corrupt image files
+
 ```py
 def extract_corrupt_img_files(dir_path='' ,verbose = True):
 
@@ -110,6 +97,7 @@ for path in [test_path, train_path]:
 print(len(corrupted))
 print(corrupted)
 ```
+## Visualizing samples
 ```py
 
 def visualize_samples(path ='', ncols = 1, nrows = 1, fig_size = (7,4), title =""):
@@ -132,6 +120,8 @@ for class_name in os.listdir(train_path):
     visualize_samples(train_path + '/' + class_name
                       ,5,2, title = class_name)
 ```  
+
+## Data augmentation
 ```py
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
